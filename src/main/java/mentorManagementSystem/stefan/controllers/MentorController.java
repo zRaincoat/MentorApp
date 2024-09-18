@@ -2,6 +2,7 @@ package mentorManagementSystem.stefan.controllers;
 
 import mentorManagementSystem.stefan.dto.MenteeDTO;
 import mentorManagementSystem.stefan.dto.MentorDTO;
+import mentorManagementSystem.stefan.entities.Mentee;
 import mentorManagementSystem.stefan.entities.Mentor;
 import mentorManagementSystem.stefan.services.MentorService;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,11 @@ public class MentorController {
         if (!mentorService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(mentorService.getAllMenteesOfMentor(id));
+        List<Mentee> mentees = mentorService.getAllMenteesOfMentor(id);
+        List<MenteeDTO> menteeDTOs = mentees.stream()
+                .map(mentorService::convertMenteeToDto)
+                .toList();
+        return ResponseEntity.ok(menteeDTOs);
     }
 
     @PostMapping

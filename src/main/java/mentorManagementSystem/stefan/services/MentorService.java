@@ -61,11 +61,8 @@ public class MentorService {
         return modelMapper.map(mentee, MenteeDTO.class);
     }
 
-    public List<MenteeDTO> getAllMenteesOfMentor(Long id) {
+    public List<Mentee> getAllMenteesOfMentor(Long id) {
         List<Mentee> mentees = getMentorById(id).getMentees();
-        List<MenteeDTO> menteeDTOs = mentees.stream()
-                .map(this::convertMenteeToDto)
-                .toList();
-        return menteeDTOs;
+        return mentees;
     }
 }
