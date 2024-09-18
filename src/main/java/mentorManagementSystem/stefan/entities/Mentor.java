@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @Builder
@@ -29,5 +31,8 @@ public class Mentor {
 
     @Column(nullable = false)
     private String expertise;
+
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Mentee> mentees;
 
 }

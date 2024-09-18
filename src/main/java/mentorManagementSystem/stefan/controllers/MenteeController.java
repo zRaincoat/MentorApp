@@ -6,8 +6,6 @@ import mentorManagementSystem.stefan.services.MenteeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/mentees")
@@ -24,7 +22,7 @@ public class MenteeController {
             return ResponseEntity.notFound().build();
         }
         Mentee mentee = menteeService.getMenteeById(id);
-        MenteeDTO menteeDTO = menteeService.convertToDto(mentee);
+        MenteeDTO menteeDTO = menteeService.convertMenteeToDto(mentee);
         return ResponseEntity.ok(menteeDTO);
     }
 
@@ -34,26 +32,14 @@ public class MenteeController {
         if(!menteeService.existsById(mentee.getId())) {
             return ResponseEntity.notFound().build();
         }
-        MenteeDTO menteeDTO = menteeService.convertToDto(mentee);
+        MenteeDTO menteeDTO = menteeService.convertMenteeToDto(mentee);
         return ResponseEntity.ok(menteeDTO);
-    }
-
-    @GetMapping("/mymentees/{mentorId}")
-    public ResponseEntity<List<MenteeDTO>> getMenteeByMentor(@PathVariable Long mentorId) {
-        List<Mentee> mentees = menteeService.getAllMenteesByMentorId(mentorId);
-        if(mentees.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        List<MenteeDTO> menteeDTOs = mentees.stream()
-                .map(menteeService::convertToDto)
-                .toList();
-        return ResponseEntity.ok(menteeDTOs);
     }
 
     @PostMapping
     public ResponseEntity<MenteeDTO> createMentee(@RequestBody Mentee mentee) {
         menteeService.create(mentee);
-        MenteeDTO menteeDTO = menteeService.convertToDto(mentee);
+        MenteeDTO menteeDTO = menteeService.convertMenteeToDto(mentee);
         return ResponseEntity.ok(menteeDTO);
     }
 

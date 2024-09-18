@@ -1,12 +1,17 @@
 package mentorManagementSystem.stefan.services;
 
+import mentorManagementSystem.stefan.dto.MenteeDTO;
 import mentorManagementSystem.stefan.dto.MentorDTO;
+import mentorManagementSystem.stefan.entities.Mentee;
 import mentorManagementSystem.stefan.entities.Mentor;
 import mentorManagementSystem.stefan.repositories.MentorRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service
 public class MentorService {
@@ -48,7 +53,19 @@ public class MentorService {
         return mentorRepository.save(mentor);
     }
 
-    public MentorDTO convertToDto(Mentor mentor) {
+    public MentorDTO convertMentorToDto(Mentor mentor) {
         return modelMapper.map(mentor, MentorDTO.class);
+    }
+
+    public MenteeDTO convertMenteeToDto(Mentee mentee) {
+        return modelMapper.map(mentee, MenteeDTO.class);
+    }
+
+    public List<MenteeDTO> getAllMenteesOfMentor(Long id) {
+        List<Mentee> mentees = getMentorById(id).getMentees();
+        List<MenteeDTO> menteeDTOs = mentees.stream()
+                .map(this::convertMenteeToDto)
+                .toList();
+        return menteeDTOs;
     }
 }

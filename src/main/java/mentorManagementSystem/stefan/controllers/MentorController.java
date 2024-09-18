@@ -1,11 +1,13 @@
 package mentorManagementSystem.stefan.controllers;
 
+import mentorManagementSystem.stefan.dto.MenteeDTO;
 import mentorManagementSystem.stefan.dto.MentorDTO;
 import mentorManagementSystem.stefan.entities.Mentor;
 import mentorManagementSystem.stefan.services.MentorService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/mentors")
@@ -22,7 +24,7 @@ public class MentorController {
             return ResponseEntity.notFound().build();
         }
         Mentor mentor = mentorService.getMentorById(id);
-        MentorDTO mentorDTO = mentorService.convertToDto(mentor);
+        MentorDTO mentorDTO = mentorService.convertMentorToDto(mentor);
         return ResponseEntity.ok(mentorDTO);
     }
 
@@ -32,8 +34,16 @@ public class MentorController {
         if (!mentorService.existsById(mentor.getId())) {
             return ResponseEntity.notFound().build();
         }
-        MentorDTO mentorDTO = mentorService.convertToDto(mentor);
+        MentorDTO mentorDTO = mentorService.convertMentorToDto(mentor);
         return ResponseEntity.ok(mentorDTO);
+    }
+
+    @GetMapping("/mymentees/{id}")
+    public ResponseEntity<List<MenteeDTO>> getAllMenteesOfAMentor(@PathVariable Long id){
+        if (!mentorService.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(mentorService.getAllMenteesOfMentor(id));
     }
 
     @PostMapping

@@ -25,6 +25,7 @@ public class Mentee {
     @Column(nullable = false)
     private String password;
 
-    @Column(name="mentor_id")
-    private Long mentorId;
+    @ManyToOne
+    @JoinColumn
+    private Mentor mentor;
 }
