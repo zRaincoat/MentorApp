@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -64,5 +65,10 @@ public class MentorService {
     public List<Mentee> getAllMenteesOfMentor(Long id) {
         List<Mentee> mentees = getMentorById(id).getMentees();
         return mentees;
+    }
+
+    public boolean checkIfMenteeHasThisMentor(Long menteeId, Long mentorId) {
+        Optional<Mentor> mentorOptional = mentorRepository.findMentorByMentees_Id(menteeId);
+        return mentorOptional.isPresent() && mentorOptional.get().getId().equals(mentorId);
     }
 }

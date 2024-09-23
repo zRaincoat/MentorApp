@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MentorRepository extends JpaRepository<Mentor, Long> {
 
@@ -23,4 +25,6 @@ public interface MentorRepository extends JpaRepository<Mentor, Long> {
     default void deleteMentorById(@Param("id") Long id) {
 
     }
+
+    Optional<Mentor> findMentorByMentees_Id(Long menteeId);
 }
