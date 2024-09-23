@@ -1,0 +1,53 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka-broker-1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-broker-1
+    ports:
+      - "9092:9092"
+      - "19092:19092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka-broker-1:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    container_name: schema-registry
+    ports:
+      - "8081:8081"
+    depends_on:
+      - kafka-broker-1
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-broker-1:9092
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+  spring-app:
+    image: your-spring-boot-app:latest
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka-broker-1
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-broker-1:9092"
+      SPRING_KAFKA_CONSUMER_GROUP_ID: "mentor-mentee-group"
+      SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: "earliest"
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: "org.apache.kafka.common.serialization.StringSerializer"
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: "org.apache.kafka.common.serialization.StringSerializer"
+      SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER: "org.apache.kafka.common.serialization.StringDeserializer"
+      SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER: "org.apache.kafka.common.serialization.StringDeserializer"
