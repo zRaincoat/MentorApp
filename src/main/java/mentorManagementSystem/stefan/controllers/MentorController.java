@@ -58,7 +58,7 @@ public class MentorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Mentor> updateMentor(@PathVariable Long id, @RequestBody Mentor mentor){
-        if(mentorService.existsById(id)) {
+        if(!mentorService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(mentorService.save(id, mentor));
@@ -69,8 +69,7 @@ public class MentorController {
         if(!mentorService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        mentorService.delete(id);
+        mentorService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

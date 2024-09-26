@@ -45,12 +45,16 @@ public class MentorService {
         return mentorRepository.existsById(id);
     }
 
-    public void delete(Long id) {
-        mentorRepository.deleteMentorById(id);
+    public void deleteById(Long id) {
+        List<Mentee> menteesList = getMentorById(id).getMentees();
+        for (Mentee mentee : menteesList) {
+            mentee.setMentor(null);
+        }
+        mentorRepository.deleteById(id);
     }
 
     public Mentor save(Long id, Mentor mentor) {
-        mentor.setId(id);
+        mentor.setPassword(passwordEncoder.encode(mentor.getPassword()));
         return mentorRepository.save(mentor);
     }
 

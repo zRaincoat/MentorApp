@@ -19,12 +19,7 @@ public interface MentorRepository extends JpaRepository<Mentor, Long> {
 
     boolean existsById(Long id);
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Mentor m WHERE m.id = :id")
-    default void deleteMentorById(@Param("id") Long id) {
-
-    }
+    void deleteById(Long id);
 
     Optional<Mentor> findMentorByMentees_Id(Long menteeId);
 }

@@ -47,7 +47,7 @@ public class MenteeService {
     }
 
     public Mentee save(Long id, Mentee mentee) {
-        mentee.setId(id);
+        mentee.setPassword(passwordEncoder.encode(mentee.getPassword()));
         return menteeRepository.save(mentee);
     }
 

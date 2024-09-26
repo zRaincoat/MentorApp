@@ -1,5 +1,6 @@
 package mentorManagementSystem.stefan.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,5 +28,6 @@ public class Mentee {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private Mentor mentor;
 }
